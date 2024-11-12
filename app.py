@@ -1,15 +1,13 @@
-from io import BytesIO
 from flask import Flask, request, jsonify
 import librosa
 import numpy as np
 import pickle
-import os
-from werkzeug.utils import secure_filename
+from io import BytesIO
 from flask_cors import CORS
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app)
 
 # Load the trained model and RFE selector
 with open('model/dog_bark_classifier33.pkl', 'rb') as model_file:
@@ -30,8 +28,7 @@ def extract_features(y, sr):
 # Default route to show backend is running
 @app.route('/')
 def index():
-    return "<h1>Backend is running</h1>" 
-
+    return "<h1>Backend is running</h1>"
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -53,3 +50,6 @@ def predict():
         return jsonify({"prediction": prediction})
 
     return jsonify({"error": "Only .wav files are accepted"}), 400
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
